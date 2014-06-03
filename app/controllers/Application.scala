@@ -6,9 +6,10 @@ import org.anormcypher._
 
 object Application extends Controller {
 
-  def create = Action {
+  def create = Action { request =>
     var id:Long = -1
-    val stmt = Cypher("CREATE (n:Node {play:true, createdAt:timestamp()}) RETURN id(n)")
+    val remote = request.remoteAddress.toString
+    val stmt = Cypher("CREATE (n:Node {play:true, createdAt:timestamp(), ip:{ip}}) RETURN id(n)").on("ip" -> remote)
     stmt().foreach { row =>
       Logger.info("created node with id: " + row[Long]("id(n)"))
       id = row[Long]("id(n)")
@@ -22,9 +23,9 @@ object Application extends Controller {
   def index = Action {implicit request =>
     val query = Cypher("MATCH (n:Node) \n" +
                        "WHERE n.createdAt > timestamp() - 1000 * 60 * 60 \n" +
-                       "RETURN id(n), n.play, n.createdAt")
+                       "RETURN id(n), n.play, n.createdAt, n.ip")
 
-    val results:List[(Long,Boolean,Long)] = query().map(row => (row[Long]("id(n)"), row[Boolean]("n.play"), row[Long]("n.createdAt"))).toList
+    val results:List[(Long,Boolean,Long,String)] = query().map(row => (row[Long]("id(n)"), row[Boolean]("n.play"), row[Long]("n.createdAt"), row[String]("n.ip"))).toList
     Ok(views.html.index(query.query, results))
   }
 

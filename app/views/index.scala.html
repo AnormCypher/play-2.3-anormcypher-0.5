@@ -1,4 +1,4 @@
-@(query:String, results:List[(Long,Boolean,Long)])(implicit flash: Flash)
+@(query:String, results:List[(Long,Boolean,Long,String)])(implicit flash: Flash)
 @ts(timestamp: Long) = @{
 new java.util.Date(timestamp).toString
 }
@@ -18,12 +18,13 @@ Running query:
 <br/>
 <br/>
 <table>
-    <tr><td>id</td><td>play</td><td>created timestamp</td></tr>
+    <tr><td>id</td><td>play</td><td>created timestamp</td><td>ip</td></tr>
     @results.map { res =>
     <tr>
         <td>@res._1</td>
         <td>@res._2</td>
         <td>@ts(res._3)</td>
+        <td>@res._4</td>
     </tr>
     }
 </table>
