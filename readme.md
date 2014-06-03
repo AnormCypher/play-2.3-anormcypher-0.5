@@ -5,5 +5,5 @@
 ### quick overview
 
 * add anormcypher to build.sbt
-* add Globals.scala with server configuration
+* add Global.scala with server configuration
 * enjoy anormcypher in your controllers
