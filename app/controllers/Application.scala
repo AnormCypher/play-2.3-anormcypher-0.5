@@ -8,7 +8,7 @@ object Application extends Controller {
 
   def create = Action { request =>
     var id:Long = -1
-    val remote = request.remoteAddress.toString
+    val remote = request.headers("HTTP_X_FORWARDED_FOR")
     val stmt = Cypher("CREATE (n:Node {play:true, createdAt:timestamp(), ip:{ip}}) RETURN id(n)").on("ip" -> remote)
     stmt().foreach { row =>
       Logger.info("created node with id: " + row[Long]("id(n)"))
