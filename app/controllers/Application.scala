@@ -20,7 +20,8 @@ object Application extends Controller {
   }
 
   def index = Action {implicit request =>
-    val query = Cypher("MATCH (n:Node) where has(n.play) \n" +
+    val query = Cypher("MATCH (n:Node) \n" +
+                       "WHERE n.createdAt > timestamp() - 1000 * 60 * 60 \n" +
                        "RETURN id(n), n.play, n.createdAt")
 
     val results:List[(Long,Boolean,Long)] = query().map(row => (row[Long]("id(n)"), row[Boolean]("n.play"), row[Long]("n.createdAt"))).toList
