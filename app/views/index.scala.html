@@ -1,0 +1,30 @@
+@(query:String, results:List[(Long,Boolean,Long)])(implicit flash: Flash)
+@ts(timestamp: Long) = @{
+new java.util.Date(timestamp).toString
+}
+
+@main("list") {
+<pre>@flash.get("query").getOrElse("")</pre>
+<h2>@flash.get("success").getOrElse("")</h2>
+
+<h1>welcome to the anormcypher example app</h1>
+
+<a href="/create">create a node...</a>
+<br/>
+<br/>
+Running query:
+<pre>@query
+</pre>
+<br/>
+<br/>
+<table>
+    <tr><td>id</td><td>play</td><td>created timestamp</td></tr>
+    @results.map { res =>
+    <tr>
+        <td>@res._1</td>
+        <td>@res._2</td>
+        <td>@ts(res._3)</td>
+    </tr>
+    }
+</table>
+}
